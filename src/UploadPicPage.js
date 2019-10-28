@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Image from "material-ui-image";
+import ApiAdapter from "./adapters/ApiAdapter";
 
 const styles = theme => ({
   button: {
@@ -35,16 +36,37 @@ class DisplayResultPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasUploaded: false
+      targetPicWasLoaded: false,
+      isUploading: true,
+      isSubmitting: false,
+      file: null
     };
   }
 
-  onChange = () => {
-    this.setState({ hasUploaded: true });
+  onInputChange = (event) => {
+    const { files } = event.target;
+    const filePreview = URL.createObjectURL(files[0]);
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(files[0]);
+    fileReader.onload = () => {
+      this.setState({
+        filePreview,
+        file: fileReader.result
+      });
+    }
+    this.setState({ targetPicWasLoaded: true });
   }
   
   startAgain = () => {
     this.setState({ hasUploaded: false });
+  }
+
+  handleUpload = async () => {
+    this.setState({ isSubmitting: true });
+    console.log("submitting");
+    console.log({ file: this.state.file });
+    const response = await ApiAdapter.uploadProfilePicture(this.state.file);
+    this.setState({ isUploading: false, isSubmitting: false });
   }
 
   render() {
@@ -53,7 +75,7 @@ class DisplayResultPage extends React.Component {
     return (
       <div className={classes.main}>
         <div className={classes.uploadPicPage}>
-          {!this.state.hasUploaded ? this.renderBeforeUpload() : this.renderAfterUpload()}
+          {this.state.isUploading ? this.renderBeforeUpload() : this.renderAfterUpload()}
         </div>
       </div>
     );
@@ -62,43 +84,50 @@ class DisplayResultPage extends React.Component {
   renderBeforeUpload() {
     const { classes } = this.props;
 
-    return (<Paper >
-    <Typography variant="h5" component="h3" className={classes.centered}>
-      Choose photo you would like to convert 
-    </Typography>
-    <input
-      accept="image/*"
-      className={classes.input}
-      id="raised-button-file"
-      multiple
-      type="file"
-      onChange={this.onChange}
-    />
-    <div className={classes.centered}>
-    <label htmlFor="raised-button-file">
-       <Button component="span" variant="contained" className={classes.button}>
-          select
-       </Button>
-    </label>
-    </div>
-  </Paper>);
+    return (
+      <Paper >
+        {this.state.file ? (<div><Image src={this.state.filePreview} /></div>) : 
+        (<Typography variant="h5" component="h3" className={classes.centered}>
+          Choose photo you would like to convert 
+        </Typography>)}
+        <input
+          accept="image/*"
+          className={classes.input}
+          id="raised-button-file"
+          multiple
+          type="file"
+          onChange={this.onInputChange}
+        />
+        <div className={classes.centered}>
+        <label htmlFor="raised-button-file">
+          <Button component="span" variant="contained" className={classes.button}>
+              select photo
+          </Button>
+        </label>
+          { this.state.targetPicWasLoaded &&  <Button variant="contained" className={classes.button} onClick={this.handleUpload}>
+              upload
+          </Button>}
+        </div>
+    </Paper>
+    );
   }
 
   renderAfterUpload() {
     const { classes } = this.props;
 
-    return (<Paper >
-    <Typography variant="h5" component="h3" className={classes.centered}>
-      Here is your avatar 
-    </Typography>
-    <div>
-      <Image src="https://i.ibb.co/CV9Js09/2019-10-28-13-15-25.jpg" />
-    </div>
-    <div className={classes.centered}>
-       <Button variant="contained" className={classes.button} onClick={this.startAgain}>
-          Upload Another One
-       </Button>
-    </div>
+    return (
+    <Paper >
+      <Typography variant="h5" component="h3" className={classes.centered}>
+        Here is your avatar 
+      </Typography>
+      <div>
+        <Image src="https://i.ibb.co/CV9Js09/2019-10-28-13-15-25.jpg" />
+      </div>
+      <div className={classes.centered}>
+        <Button variant="contained" className={classes.button} onClick={this.startAgain}>
+            Upload Another One
+        </Button>
+      </div>
     </Paper>);
   }
 }

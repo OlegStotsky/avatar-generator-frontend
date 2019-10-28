@@ -8,7 +8,6 @@ const AppRouter = () => (
     <div>
       <Switch>
         <Route path="/" render={() => <UploadPicPage />} />
-        <Route path="/result" render={() => <DisplayResultPage/>} />
       </Switch>
     </div>
   </BrowserRouter>
