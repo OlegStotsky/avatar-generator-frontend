@@ -42,6 +42,10 @@ class DisplayResultPage extends React.Component {
   onChange = () => {
     this.setState({ hasUploaded: true });
   }
+  
+  startAgain = () => {
+    this.setState({ hasUploaded: false });
+  }
 
   render() {
     const { classes } = this.props;
@@ -89,6 +93,11 @@ class DisplayResultPage extends React.Component {
     </Typography>
     <div>
       <Image src="https://i.ibb.co/CV9Js09/2019-10-28-13-15-25.jpg" />
+    </div>
+    <div className={classes.centered}>
+       <Button variant="contained" className={classes.button} onClick={this.startAgain}>
+          Upload Another One
+       </Button>
     </div>
     </Paper>);
   }
