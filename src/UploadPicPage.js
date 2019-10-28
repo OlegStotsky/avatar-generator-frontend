@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Image from "material-ui-image";
 
 const styles = theme => ({
   button: {
@@ -72,7 +73,7 @@ class DisplayResultPage extends React.Component {
     <div className={classes.centered}>
     <label htmlFor="raised-button-file">
        <Button component="span" variant="contained" className={classes.button}>
-          unselect
+          select
        </Button>
     </label>
     </div>
@@ -84,22 +85,10 @@ class DisplayResultPage extends React.Component {
 
     return (<Paper >
     <Typography variant="h5" component="h3" className={classes.centered}>
-      Choose photo you would like to convert 
+      Here is your avatar 
     </Typography>
-    <input
-      accept="image/*"
-      className={classes.input}
-      id="raised-button-file"
-      multiple
-      type="file"
-      onChange={this.onChange}
-    />
-    <div className={classes.centered}>
-    <label htmlFor="raised-button-file">
-       <Button component="span" variant="contained" className={classes.button}>
-          unselect
-       </Button>
-    </label>
+    <div>
+      <Image src="https://i.ibb.co/CV9Js09/2019-10-28-13-15-25.jpg" />
     </div>
     </Paper>);
   }
