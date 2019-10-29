@@ -39,7 +39,8 @@ class DisplayResultPage extends React.Component {
       targetPicWasLoaded: false,
       isUploading: true,
       isSubmitting: false,
-      file: null
+      file: null,
+      generatedAvatar: null
     };
   }
 
@@ -66,7 +67,7 @@ class DisplayResultPage extends React.Component {
     console.log("submitting");
     console.log({ file: this.state.file });
     const response = await ApiAdapter.uploadProfilePicture(this.state.file);
-    this.setState({ isUploading: false, isSubmitting: false });
+    this.setState({ isUploading: false, isSubmitting: false, generatedAvatar: `data:image/png;base64,${response}` });
   }
 
   render() {
@@ -121,7 +122,7 @@ class DisplayResultPage extends React.Component {
         Here is your avatar 
       </Typography>
       <div>
-        <Image src="https://i.ibb.co/CV9Js09/2019-10-28-13-15-25.jpg" />
+        <Image src={this.state.generatedAvatar} />
       </div>
       <div className={classes.centered}>
         <Button variant="contained" className={classes.button} onClick={this.startAgain}>
