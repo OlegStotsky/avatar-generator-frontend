@@ -25,10 +25,11 @@ const styles = theme => ({
     width: "600px"
   },
   main: {
+    marginTop: "10px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh"
+    minHeight: "50vh"
   },
   centered: {
     display: "flex",
