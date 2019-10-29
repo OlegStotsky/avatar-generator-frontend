@@ -1,7 +1,6 @@
-import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import UploadPicPage from "../UploadPicPage";
-import DisplayResultPage from "../DisplayResultPage";
 
 const AppRouter = () => (
   <BrowserRouter>

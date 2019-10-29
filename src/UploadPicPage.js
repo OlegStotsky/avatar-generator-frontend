@@ -5,6 +5,12 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Image from "material-ui-image";
 import Spinner from "react-spinner-material";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import ApiAdapter from "./adapters/ApiAdapter";
 
 const styles = theme => ({
@@ -41,8 +47,10 @@ class DisplayResultPage extends React.Component {
       isUploading: true,
       isSubmitting: false,
       file: null,
-      generatedAvatar: null
+      generatedAvatar: null,
+      genderValue: null
     };
+    this.genderValue = "none";
   }
 
   onInputChange = event => {
@@ -67,16 +75,24 @@ class DisplayResultPage extends React.Component {
       file: null,
       generatedAvatar: null
     });
+    this.genderValue = "none";
   };
 
   handleUpload = async () => {
     this.setState({ isSubmitting: true });
-    const response = await ApiAdapter.uploadProfilePicture(this.state.file);
+    const response = await ApiAdapter.uploadProfilePicture(
+      this.state.file,
+      this.genderValue
+    );
     this.setState({
       isUploading: false,
       isSubmitting: false,
       generatedAvatar: `data:image/png;base64,${response}`
     });
+  };
+
+  handleGenderChange = event => {
+    this.genderValue = event.currentTarget.value;
   };
 
   render() {
@@ -98,6 +114,32 @@ class DisplayResultPage extends React.Component {
 
     return (
       <Paper>
+        {this.state.targetPicWasLoaded &&
+          this.state.isUploading &&
+          !this.state.isSubmitting && (
+            <div className={classes.centered}>
+              <FormControl component="fieldset" className={classes.formControl}>
+                <FormLabel component="legend">Gender</FormLabel>
+                <RadioGroup
+                  aria-label="gender"
+                  name="gender"
+                  value={this.state.genderValue}
+                  onChange={this.handleGenderChange}
+                >
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Female"
+                  />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+          )}
         {this.state.file ? (
           this.state.isSubmitting ? (
             <div className={classes.centered}>
