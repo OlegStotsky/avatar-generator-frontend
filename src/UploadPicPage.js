@@ -80,15 +80,28 @@ class DisplayResultPage extends React.Component {
 
   handleUpload = async () => {
     this.setState({ isSubmitting: true });
-    const response = await ApiAdapter.uploadProfilePicture(
-      this.state.file,
-      this.genderValue
-    );
-    this.setState({
-      isUploading: false,
-      isSubmitting: false,
-      generatedAvatar: `data:image/png;base64,${response}`
-    });
+    try {
+      const response = await ApiAdapter.uploadProfilePicture(
+        this.state.file,
+        this.genderValue
+      );
+      this.setState({
+        isUploading: false,
+        isSubmitting: false,
+        generatedAvatar: `data:image/png;base64,${response}`
+      });
+    } catch (err) {
+      alert(" Что-то пошло не так. Перезагрузите страницу");
+      this.setState({
+        targetPicWasLoaded: false,
+        isUploading: true,
+        isSubmitting: false,
+        file: null,
+        generatedAvatar: null,
+        genderValue: null
+      });
+      this.genderValue = "none";
+    }
   };
 
   handleGenderChange = event => {
